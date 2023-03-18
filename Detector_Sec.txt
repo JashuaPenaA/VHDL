@@ -1,0 +1,76 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Detector_Sec is
+    Port ( clock : in STD_LOGIC;
+           resetn : in STD_LOGIC;
+           w : in STD_LOGIC;
+           z : out STD_LOGIC);
+end Detector_Sec;
+
+architecture Behavioral of Detector_Sec is
+
+type state_type is (a, b, c, d, e, f, g, h);
+signal y: state_type ;
+
+begin
+    process (resetn, clock)
+        begin
+            if resetn = '0' then
+                    y <= a;
+            elsif (rising_edge(clock)) then
+                    case y is
+                        when a =>
+                            if w='0' then
+                                y <= a;
+                            else
+                                y <= b;
+                            end if;
+                        when b =>
+                            if w='1' then
+                                y <= b;
+                            else
+                                y <= c;
+                            end if;
+                        when c =>
+                            if w='1'then
+                                y <= b;
+                            else
+                                y <= d;
+                            end if;
+                        when d =>
+                            if w='1'then
+                                y <= b;
+                            else
+                                y <= e;
+                            end if;
+                        when e =>
+                            if w='1'then
+                                y <= b;
+                            else
+                                y <= f;
+                            end if;
+                        when f =>
+                            if w='1'then
+                                y <= b;
+                            else
+                                y <= g;
+                            end if;
+                        when g =>
+                            if w='0'then
+                                y <= a;
+                            else
+                                y <= h;
+                            end if;
+                        when h =>
+                            if w='0'then
+                                y <= a;
+                            else
+                                y <= b;
+                            end if;
+                    end case;
+            end if;
+        end process;
+        z <= '1' when y=h else '0';
+
+end Behavioral;

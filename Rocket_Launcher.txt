@@ -1,0 +1,17 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Rocket_Launcher is
+    Port ( A : in STD_LOGIC;
+           B : in STD_LOGIC;
+           C : in STD_LOGIC;
+           F : out STD_LOGIC);
+end Rocket_Launcher;
+
+architecture Behavioral of Rocket_Launcher is
+
+begin
+        
+        F <= (A and B) or (A and C) or (B and C);
+
+end Behavioral;

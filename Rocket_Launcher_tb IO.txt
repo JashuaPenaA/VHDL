@@ -1,0 +1,71 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use std.textio.all;
+use ieee.std_logic_textio.all;
+
+entity Rocket_Launcher_tb is
+end;
+
+architecture bench of Rocket_Launcher_tb is
+
+  component Rocket_Launcher
+      Port ( A : in STD_LOGIC;
+             B : in STD_LOGIC;
+             C : in STD_LOGIC;
+             F : out STD_LOGIC);
+  end component;
+
+  signal A: STD_LOGIC;
+  signal B: STD_LOGIC;
+  signal C: STD_LOGIC;
+  signal F: STD_LOGIC;
+
+  file input_buf : text;  -- text is keyword
+
+begin
+
+  uut: Rocket_Launcher port map ( A => A,
+                             B => B,
+                             C => C,
+                             F => F );
+
+  stimulus: process
+  
+  variable read_col_from_input_buf : line; -- read lines one by one from input_buf
+  variable A_test, B_test, C_test, F_test: std_logic; -- to save col1 and col2 values of 1 bit
+  variable val_SPACE : character;  -- for spaces between data in file
+  
+  begin
+  
+    -- if modelsim-project is created, then provide the relative path of 
+    -- input-file (i.e. read_file_ex.txt) with respect to main project folder
+    file_open(input_buf, "C:\Users\Jashu\Downloads\input_file.txt",  read_mode); 
+    -- else provide the complete path for the input file as show below 
+    -- file_open(input_buf, "E:/VHDLCodes/input_output_files/read_file_ex.txt", read_mode); 
+
+    while not endfile(input_buf) loop
+    readline(input_buf, read_col_from_input_buf);
+    read(read_col_from_input_buf, A_test);
+    read(read_col_from_input_buf, val_SPACE);           -- read in the space character
+    read(read_col_from_input_buf, B_test);
+    read(read_col_from_input_buf, val_SPACE);           -- read in the space character
+    read(read_col_from_input_buf, C_test);
+    read(read_col_from_input_buf, val_SPACE);           -- read in the space character
+    read(read_col_from_input_buf, F_test);
+
+  -- Pass the read values to signals
+    A <= A_test;
+    B <= B_test;
+    C <= C_test;
+
+    wait for 5 ns;  --  to display results for 20 ns	  
+    assert F = F_test report "Test case did not pass" severity error;
+    end loop;
+
+    file_close(input_buf);             
+
+    wait;
+  end process;
+
+
+end;

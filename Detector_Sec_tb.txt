@@ -1,0 +1,82 @@
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_Std.all;
+use std.textio.all;
+use ieee.std_logic_textio.all;
+
+entity Detector_Sec_tb is
+end;
+
+architecture bench of Detector_Sec_tb is
+
+  component Detector_Sec
+      Port ( clock : in STD_LOGIC;
+             resetn : in STD_LOGIC;
+             w : in STD_LOGIC;
+             z : out STD_LOGIC);
+  end component;
+
+  signal clock: STD_LOGIC;
+  signal resetn: STD_LOGIC;
+  signal w: STD_LOGIC;
+  signal z: STD_LOGIC;
+  
+  file input_buf : text;
+
+  constant clock_period: time := 10 ns;
+  signal stop_the_clock: boolean;
+
+begin
+
+  uut: Detector_Sec port map ( clock  => clock,
+                               resetn => resetn,
+                               w      => w,
+                               z      => z );
+
+  stimulus: process
+  
+  variable read_col_from_input_buf : line;
+  variable W_test, Z_test: std_logic;
+  variable val_SPACE : character;
+  
+  begin
+  
+  file_open(input_buf, "C:\Users\Jashu\Downloads\input_file.txt",  read_mode); 
+  
+    -- Put initialisation code here
+
+    resetn <= '0';
+    w <= '0';
+    wait for 5 ns;
+    resetn <= '1';
+    wait for 5 ns;
+    
+    -- Put test bench stimulus code here
+    
+    while not endfile(input_buf) loop
+    readline(input_buf, read_col_from_input_buf);
+    read(read_col_from_input_buf, W_test);
+    read(read_col_from_input_buf, val_SPACE);
+    read(read_col_from_input_buf, Z_test);
+
+    w <= W_test;
+    wait for 10 ns;
+    assert Z = Z_test report "Test case did not pass" severity error;
+    end loop;
+
+    file_close(input_buf); 
+
+    stop_the_clock <= true;
+    wait;
+  end process;
+
+  clocking: process
+  begin
+    while not stop_the_clock loop
+      clock <= '0', '1' after clock_period / 2;
+      wait for clock_period;
+    end loop;
+    wait;
+  end process;
+
+end;

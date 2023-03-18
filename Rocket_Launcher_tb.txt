@@ -1,0 +1,52 @@
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_Std.all;
+
+entity Rocket_Launcher_tb is
+end;
+
+architecture bench of Rocket_Launcher_tb is
+
+  component Rocket_Launcher
+      Port ( A : in STD_LOGIC;
+             B : in STD_LOGIC;
+             C : in STD_LOGIC;
+             F : out STD_LOGIC);
+  end component;
+  
+  signal A: STD_LOGIC;
+  signal B: STD_LOGIC;
+  signal C: STD_LOGIC;
+  signal F: STD_LOGIC;
+
+begin
+
+  uut: Rocket_Launcher port map ( A => A,
+                             B => B,
+                             C => C,
+                             F => F );
+
+  stimulus: process
+  begin 
+    
+    A <= '0';
+    B <= '0';
+    C <= '0';
+    wait for 20 ns;
+	
+	A <= '0';
+    B <= '0';
+    C <= '1';
+    wait for 20 ns;
+
+    A <= '0';
+    B <= '0';
+    C <= '0';
+
+    wait;
+  end process;
+
+
+end;
+
+

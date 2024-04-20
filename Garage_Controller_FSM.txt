@@ -1,0 +1,68 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity garage_door_controller is
+	port (
+		clk, rst: in std_logic;
+		remote, door_closed, door_open: in std_logic;
+		motor, direction: out std_logic);
+end entity;
+
+architecture fsm of garage_door_controller is
+	type state_type is (ready_to_open, opening1, opening2,
+		opening3, ready_to_close, closing1, closing2, closing3);
+	signal state: state_type;
+begin
+
+	--logic and register for state:
+	process (clk, rst)
+	begin
+		if rst = '1' then
+			state <= ready_to_open;
+		elsif rising_edge(clk) then
+			case state is
+				when ready_to_open =>
+					...
+				when opening1 =>
+					...
+				when opening2 =>
+					...
+				when opening3 =>
+					...
+				when ready_to_close =>
+					...
+				when closing1 =>
+					...
+				when closing2 =>
+					...
+				when closing3 =>
+					...
+			end case;
+		end if;
+	end process;
+	
+	--logic and register for outputs:
+	process (clk)
+	begin
+		if rising_edge(clk) then
+			case state is
+				when ready_to_open =>
+					...
+				when opening1 =>
+					...
+				when opening2 =>
+					...
+				when opening3 =>
+					...
+				when ready_to_close =>
+					...
+				when closing1 =>
+					...
+				when closing2 =>
+					...
+				when closing3 =>
+					...
+			end case;
+		end if;
+	end process;
+end architecture;

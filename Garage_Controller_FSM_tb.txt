@@ -1,0 +1,97 @@
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_Std.all;
+
+entity garage_door_controller_tb is
+end;
+
+architecture bench of garage_door_controller_tb is
+
+  component garage_door_controller
+  	port (
+  		clk, rst: in std_logic;
+  		remote, door_closed, door_open: in std_logic;
+  		motor, direction: out std_logic);
+  end component;
+
+  signal clk, rst: std_logic;
+  signal remote, door_closed, door_open: std_logic;
+  signal motor, direction: std_logic;
+
+  constant clock_period: time := 10 ns;
+  signal stop_the_clock: boolean;
+
+begin
+
+  uut: garage_door_controller port map ( clk         => clk,
+                                         rst         => rst,
+                                         remote      => remote,
+                                         door_closed => door_closed,
+                                         door_open   => door_open,
+                                         motor       => motor,
+                                         direction   => direction );
+
+  stimulus: process
+  begin
+  
+    -- Put initialisation code here
+
+    rst <= '1';
+    remote <= '0';
+    door_open <= '0';
+    door_closed <= '1';
+    wait for 5 ns;
+    rst <= '0';
+    wait for 5 ns;
+
+    -- Put test bench stimulus code here
+    
+    door_open <= '0';
+    door_closed <= '1';
+    remote <= '0';
+    wait for 13 ns;
+    
+    door_open <= '0';
+    door_closed <= '1';
+    remote <= '1';
+    wait for 15 ns;
+    
+    door_open <= '0';
+    door_closed <= '0';
+    remote <= '0';
+    wait for 15 ns;
+    
+    door_open <= '1';
+    door_closed <= '0';
+    remote <= '0';
+    wait for 15 ns;
+    
+    door_open <= '1';
+    door_closed <= '0';
+    remote <= '1';
+    wait for 15 ns;
+    
+    door_open <= '0';
+    door_closed <= '0';
+    remote <= '0';
+    wait for 15 ns;
+    
+    door_open <= '0';
+    door_closed <= '1';
+    remote <= '0';
+    wait for 30 ns;
+
+    stop_the_clock <= true;
+    wait;
+  end process;
+
+  clocking: process
+  begin
+    while not stop_the_clock loop
+      clk <= '0', '1' after clock_period / 2;
+      wait for clock_period;
+    end loop;
+    wait;
+  end process;
+
+end;
